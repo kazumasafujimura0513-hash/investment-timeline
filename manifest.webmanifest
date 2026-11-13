@@ -1,0 +1,27 @@
+{
+  "id": "./",
+  "name": "INVESTMENT TIMELINE",
+  "short_name": "投資タイムライン",
+  "description": "決算・金融政策・マクロイベントを一望する投資スケジュール",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape-primary",
+  "background_color": "#0b1220",
+  "theme_color": "#101827",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

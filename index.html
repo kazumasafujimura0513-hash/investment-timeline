@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="INVESTMENT TIMELINE"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png"><title>INVESTMENT TIMELINE v3.1</title>
+<style>
+:root{--bg:#0b1220;--panel:#131e30;--line:#293951;--txt:#edf3fb;--muted:#9aabc1;--blue:#78aaff;--gold:#e6b95d;--red:#ff7d86;--green:#49c99b;--purple:#c2a0ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{padding:18px 16px;background:linear-gradient(135deg,#172a45,#101827);border-bottom:1px solid var(--line)}h1{font-size:19px;letter-spacing:.07em;margin:0}header p{margin:5px 0 0;color:var(--muted);font-size:12px}
+main{max-width:1200px;margin:auto;padding:14px 12px 60px}.toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.toolbar button,button{border:1px solid var(--line);background:#1a2940;color:var(--txt);border-radius:9px;padding:9px 12px;font:inherit;cursor:pointer}.toolbar button.active,.primary{background:#315d91;border-color:#4778b0}.spacer{flex:1}.muted{color:var(--muted)}.intro{font-size:12px;color:var(--muted);line-height:1.65;margin:5px 0 13px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin:10px 0}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.timeline-wrap{overflow:auto;border:1px solid var(--line);border-radius:13px;background:var(--panel);-webkit-overflow-scrolling:touch}.timeline{min-width:max-content;position:relative}
+.months,.dayhead,.rowline{display:grid;grid-template-columns:160px repeat(var(--days),minmax(13px,1fr))}
+.months{height:34px;background:#17253a;border-bottom:1px solid var(--line);font-size:11px;color:#d8e5f6;position:sticky;top:0;z-index:6}
+.months .stub,.dayhead .stub{position:sticky;left:0;background:#17253a;z-index:8;padding:9px 9px;border-right:1px solid var(--line);font-weight:600}
+.monthlabel{padding:9px 5px;text-align:center;border-right:1px solid #43536a;white-space:nowrap;font-weight:700}
+.dayhead{height:30px;background:#111c2d;border-bottom:1px solid var(--line);font-size:9px;color:var(--muted);position:sticky;top:34px;z-index:5}
+.dayhead .stub{background:#111c2d;padding:8px 9px}.day{text-align:center;padding-top:7px;border-right:1px solid #202f44}.day.weekend{background:#172234}.day.today{background:#304b6e;color:white;font-weight:800}
+.rowline{min-height:48px;border-bottom:1px solid var(--line);position:relative}.rowname{position:sticky;left:0;z-index:3;background:#111c2d;border-right:1px solid var(--line);padding:8px 9px;display:flex;flex-direction:column;justify-content:center;min-width:0}.rowname strong{font-size:11px;white-space:nowrap}.rowname small{font-size:9px;color:var(--muted)}
+.cell{border-right:1px solid #1d2b3e;position:relative;display:flex;align-items:center;justify-content:center}.cell.weekend{background:#111b2a}.cell.today{background:#172b43}
+.event{width:13px;height:13px;border-radius:50%;border:2px solid #fff;padding:0;z-index:2;box-shadow:0 0 0 3px #ffffff18;cursor:pointer}.event.macro{background:var(--gold)}.event.earnings{background:var(--blue)}.event.action{background:var(--red)}.event.personal{background:var(--purple)}.event.past{opacity:.4}.event:hover{transform:scale(1.35)}
+.eventcard{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:11px;display:flex;justify-content:space-between;gap:12px;align-items:center;margin:8px 0}.eventcard strong{font-size:13px}.eventcard small{display:block;color:var(--muted);font-size:11px;margin-top:3px;line-height:1.5}.tag{font-size:10px;padding:3px 7px;border-radius:20px;background:#26364d;color:#c9d8eb;white-space:nowrap}
+.formbox{display:none;background:var(--panel);border:1px solid var(--line);padding:13px;border-radius:12px;margin:12px 0}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}label{font-size:11px;color:var(--muted);display:block;margin:0 0 4px}input,select,textarea{width:100%;background:#0d1726;border:1px solid var(--line);border-radius:8px;color:var(--txt);padding:10px;font:inherit}.wide{grid-column:1/-1}.actions{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}.actions button{font-size:12px}.delete{color:#ff9aa0}.hint{background:#18273b;border:1px solid #314967;padding:11px;border-radius:10px;color:#bfd0e5;font-size:12px;line-height:1.6;margin:13px 0}.empty{padding:18px;text-align:center;color:var(--muted)}.source{color:#9fc3ff;text-decoration:underline}
+@media(max-width:600px){.months,.dayhead,.rowline{grid-template-columns:125px repeat(var(--days),minmax(13px,1fr))}.rowname{padding:7px}.rowname strong{font-size:10px}.rowname small{font-size:9px}.formgrid{grid-template-columns:1fr}.wide{grid-column:auto}}
+</style></head><body>
+<header><h1>INVESTMENT TIMELINE</h1><p>決算・金融政策・マクロイベントを一望する投資スケジュール</p></header>
+<main>
+<div class="toolbar"><button class="active" data-range="182">半年表示</button><button data-range="30">30日</button><button data-range="90">90日</button><span class="spacer"></span><button onclick="openEvent()" class="primary">＋ イベント追加</button><button onclick="openTicker()">銘柄行を追加</button><button id="installAppBtn" style="display:none">ホーム画面に追加</button></div>
+<p class="intro">縦軸＝銘柄・市場イベント、横軸＝日付。月名を明記し、イベントの丸印は実際の日付列に配置します。横スクロールで半年間を確認できます。日付は日本時間表示を基本とし、米国市場の発表は米国現地日付も詳細に併記します。</p>
+<div class="legend"><span><i class="dot" style="background:var(--blue)"></i>個別銘柄の決算</span><span><i class="dot" style="background:var(--gold)"></i>マクロ・金融政策</span><span><i class="dot" style="background:var(--red)"></i>売買判断・期限</span><span><i class="dot" style="background:var(--purple)"></i>個人メモ</span></div>
+<div class="timeline-wrap" id="timelineWrap"><div class="timeline" id="timeline"></div></div>
+<div class="hint">青い丸は決算日です。NVIDIAの2026年第3四半期決算発表は米国時間11月17日午後1時20分頃、日本時間では11月18日朝です。月名と日付列を分け、丸印の位置を日付セルに固定しました。イベントの「確定」は公式発表済み、「予定」は公式日程だが暫定、「未発表」は会社側の発表待ちです。</div>
+<div class="formbox" id="eventForm"><h3 style="margin:0 0 10px;font-size:15px">イベント登録・編集</h3><div class="formgrid"><div><label>イベント名</label><input id="evTitle" placeholder="例：理経 決算発表"></div><div><label>表示日（日本時間）</label><input id="evDate" type="date"></div><div><label>紐づく行</label><select id="evTicker"></select></div><div><label>種類</label><select id="evType"><option value="earnings">決算</option><option value="macro">マクロ・金融政策</option><option value="action">売買判断・注文期限</option><option value="personal">個人メモ</option></select></div><div><label>確度</label><select id="evStatus"><option>公式確定</option><option>公式暫定</option><option>未発表・要確認</option><option>個人設定</option></select></div><div><label>出典URL（任意）</label><input id="evSource" placeholder="https://..."></div><div class="wide"><label>事前に確認すること・メモ</label><textarea id="evMemo" rows="2"></textarea></div></div><div class="actions"><button class="primary" onclick="saveEvent()">保存</button><button onclick="closeEvent()">閉じる</button></div></div>
+<div class="formbox" id="tickerForm"><h3 style="margin:0 0 10px;font-size:15px">銘柄行を追加</h3><div class="formgrid"><div><label>銘柄名</label><input id="tkName" autocomplete="off" placeholder="例：ソニーグループ"></div><div><label>コード・ティッカー</label><input id="tkCode" autocomplete="off" placeholder="例：6758 / SONY"></div></div><p class="intro">追加後、銘柄行とイベント登録欄の両方に反映されます。</p><div class="actions"><button class="primary" onclick="saveTicker()">追加</button><button onclick="tickerForm.style.display='none'">閉じる</button></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px"><strong style="font-size:14px">イベント一覧（時系列）</strong><span id="count" class="muted" style="font-size:11px"></span></div><div id="eventList"></div>
+<div class="actions" style="margin-top:16px"><button onclick="exportData()">予定をバックアップ</button><button onclick="document.getElementById('importFile').click()">バックアップ復元</button><input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)"></div>
+<p class="intro" style="margin-top:18px">注意：企業の決算日は「公式確定」「公式予定」「推定」「未発表」を区別しています。推定日は変更される可能性があります。イベントデータはブラウザ内に保存されます。通知機能・自動更新は未実装です。</p>
+</main>
+<script>
+const DBKEY='investment_timeline_v2';const today=new Date(2026,10,13);let range=182,editId=null;
+const tickers=[{id:'NVDA',name:'NVIDIA',code:'NVDA'},{id:'GOOGL',name:'Alphabet',code:'GOOGL'},{id:'APH',name:'Amphenol',code:'APH'},{id:'RIKEI',name:'理経',code:'8226'},{id:'SHIZUKI',name:'指月電機',code:'6994'},{id:'KIKKOMAN',name:'キッコーマン',code:'2801'},{id:'YASKAWA',name:'安川電機',code:'6506'},{id:'IDEMITSU',name:'出光興産',code:'5019'},{id:'GOLD',name:'金・銀・プラチナ',code:'貴金属'},{id:'MACRO',name:'市場全体・マクロ',code:'GLOBAL'}];
+const seedEvents=[
+{id:'nvda-q3',title:'NVIDIA FY2027 Q3決算発表',date:'2026-11-18',ticker:'NVDA',type:'earnings',status:'公式確定',memo:'米国時間11/17 13:20 PT頃に決算資料公開、17:00 ETに説明会。日本時間11/18朝。売上・データセンター売上・粗利益率・次四半期見通しを確認。',source:'https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Sets-Conference-Call-for-Third-Quarter-Financial-Results/'},
+{id:'fomc-minutes-nov',title:'FOMC 10月会合 議事要旨',date:'2026-11-19',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間11/18公表予定。日本時間は11/19早朝。',source:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+{id:'election-review',title:'米国中間選挙・結果確認',date:'2026-11-04',ticker:'MACRO',type:'macro',status:'公式確定',memo:'投開票日は米国時間11/3。結果・議会構成・政策への影響を確認。'},
+{id:'jobs-dec',title:'米雇用統計（11月分）',date:'2026-12-04',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜22:30。',source:'https://www.bls.gov/schedule/news_release/empsit.htm'},
+{id:'cpi-dec',title:'米CPI（11月分）',date:'2026-12-10',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜22:30。',source:'https://www.bls.gov/schedule/news_release/cpi.htm'},
+{id:'fomc-dec',title:'FOMC政策決定・議長会見',date:'2026-12-10',ticker:'MACRO',type:'macro',status:'公式確定',memo:'会合は米国時間12/8–9。声明・会見は12/9 14:00 ET、日本時間12/10 4:00頃。',source:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+{id:'fomc-min-dec',title:'FOMC 12月会合 議事要旨',date:'2026-12-31',ticker:'MACRO',type:'macro',status:'公式確定',memo:'FRB予定表の米国時間12/30公表。日本時間12/31早朝。',source:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+{id:'jobs-jan',title:'米雇用統計（12月分）',date:'2027-01-08',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜22:30。',source:'https://www.bls.gov/schedule/news_release/empsit.htm'},
+{id:'cpi-jan',title:'米CPI（12月分）',date:'2027-01-13',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜22:30。',source:'https://www.bls.gov/schedule/news_release/cpi.htm'},
+{id:'fomc-jan',title:'FOMC政策決定・議長会見',date:'2027-01-28',ticker:'MACRO',type:'macro',status:'公式暫定',memo:'会合は米国時間1/26–27。政策発表は1/27 14:00 ET、日本時間1/28 4:00頃。',source:'https://www.federalreserve.gov/newsevents/pressreleases/monetary20261112a.htm'},
+{id:'jobs-feb',title:'米雇用統計（1月分）',date:'2027-02-05',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜22:30。',source:'https://www.bls.gov/schedule/news_release/empsit.htm'},
+{id:'cpi-feb',title:'米CPI（1月分）',date:'2027-02-11',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜22:30。',source:'https://www.bls.gov/schedule/news_release/cpi.htm'},
+{id:'jobs-mar',title:'米雇用統計（2月分）',date:'2027-03-05',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜22:30。',source:'https://www.bls.gov/schedule/news_release/empsit.htm'},
+{id:'fomc-mar',title:'FOMC政策決定・議長会見',date:'2027-03-18',ticker:'MACRO',type:'macro',status:'公式暫定',memo:'会合は米国時間3/16–17。政策発表は3/17 14:00 ET、日本時間3/18 3:00頃（夏時間）。',source:'https://www.federalreserve.gov/newsevents/pressreleases/monetary20261112a.htm'},
+{id:'cpi-mar',title:'米CPI（2月分）',date:'2027-03-10',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜22:30。',source:'https://www.bls.gov/schedule/news_release/cpi.htm'},
+{id:'jobs-apr',title:'米雇用統計（3月分）',date:'2027-04-02',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜21:30（夏時間）。',source:'https://www.bls.gov/schedule/news_release/empsit.htm'},
+{id:'cpi-apr',title:'米CPI（3月分）',date:'2027-04-13',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜21:30（夏時間）。',source:'https://www.bls.gov/schedule/news_release/cpi.htm'},
+{id:'fomc-apr',title:'FOMC政策決定・議長会見',date:'2027-04-29',ticker:'MACRO',type:'macro',status:'公式暫定',memo:'会合は米国時間4/27–28。政策発表は4/28 14:00 ET、日本時間4/29 3:00頃。',source:'https://www.federalreserve.gov/newsevents/pressreleases/monetary20261112a.htm'},
+{id:'jobs-may',title:'米雇用統計（4月分）',date:'2027-05-07',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜21:30（夏時間）。',source:'https://www.bls.gov/schedule/news_release/empsit.htm'},
+{id:'cpi-may',title:'米CPI（4月分）',date:'2027-05-12',ticker:'MACRO',type:'macro',status:'公式確定',memo:'米国時間8:30 ET。日本時間同日夜21:30（夏時間）。',source:'https://www.bls.gov/schedule/news_release/cpi.htm'}
+,{id:'aph-q4-2026',title:'Amphenol 2026年第4四半期決算',date:'2027-01-27',ticker:'APH',type:'earnings',status:'公式確定',memo:'会社IRイベントカレンダー掲載日。米国現地日付。',source:'https://investors.amphenol.com/news-and-events/events/default.aspx'}
+,{id:'googl-q4-2026',title:'Alphabet 2026年第4四半期決算（予想）',date:'2027-02-02',ticker:'GOOGL',type:'earnings',status:'推定・要確認',memo:'外部決算カレンダーの予想日。会社公式IRによる確定発表ではない。正式発表後に更新する。',source:'https://abc.xyz/investor/'}
+,{id:'nvda-q4-fy27',title:'NVIDIA FY2027 第4四半期決算（予想）',date:'2027-02-24',ticker:'NVDA',type:'earnings',status:'推定・要確認',memo:'過去の決算発表間隔に基づく外部予想。会社公式IRの確定日ではない。',source:'https://investor.nvidia.com/financial-info/financial-reports/'}
+,{id:'yaskawa-fy2027',title:'安川電機 2027年2月期 本決算（4月予定・日付未公表）',date:'',ticker:'YASKAWA',type:'earnings',status:'公式予定・日付未公表',memo:'会社IRカレンダーでは2027年4月に本決算予定。具体的な発表日は未公表。',source:'https://www.yaskawa.co.jp/ir/calendar'}
+,{id:'rikei-fy2027-pending',title:'理経 2027年3月期 本決算（第4四半期・発表日未発表）',date:'',ticker:'RIKEI',type:'earnings',status:'未発表・要確認',memo:'会社による発表日公表待ち。公表後に日付を入力する。',source:'https://www.rikei.co.jp/ir/'}
+,{id:'shizuki-fy2027-pending',title:'指月電機 2027年3月期 本決算（第4四半期・発表日未発表）',date:'',ticker:'SHIZUKI',type:'earnings',status:'未発表・要確認',memo:'会社による発表日公表待ち。公表後に日付を入力する。',source:'https://www.shizuki.co.jp/ir/'}
+,{id:'kikkoman-fy2027-pending',title:'キッコーマン 2027年3月期 本決算（第4四半期・発表日未発表）',date:'',ticker:'KIKKOMAN',type:'earnings',status:'未発表・要確認',memo:'会社による発表日公表待ち。公表後に日付を入力する。',source:'https://www.kikkoman.com/jp/ir/'}
+,{id:'idemitsu-fy2027-pending',title:'出光興産 2027年3月期 本決算（第4四半期・発表日未発表）',date:'',ticker:'IDEMITSU',type:'earnings',status:'未発表・要確認',memo:'会社による発表日公表待ち。公表後に日付を入力する。',source:'https://www.idemitsu.com/jp/ir/'}
+
+
+];
+let saved=null;try{saved=JSON.parse(localStorage.getItem(DBKEY)||'null')}catch(e){}
+let db=saved&&Array.isArray(saved.tickers)&&Array.isArray(saved.events)?saved:{tickers,events:seedEvents};
+if(saved){for(const t of tickers)if(!db.tickers.some(x=>x.id===t.id))db.tickers.push(t);for(const e of seedEvents)if(!db.events.some(x=>x.id===e.id))db.events.push(e)}
+const $=id=>document.getElementById(id);
+function persist(){try{localStorage.setItem(DBKEY,JSON.stringify(db));render()}catch(e){alert('保存に失敗しました。ブラウザの保存容量・プライベートモード設定を確認してください。')}}function addDays(d,n){let x=new Date(d);x.setDate(x.getDate()+n);return x}function key(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){let start=new Date(today),days=range;let dates=Array.from({length:days},(_,i)=>addDays(start,i));let tl=document.getElementById('timeline');tl.style.setProperty('--days',days);
+let monthCells=`<div class="months"><div class="stub">銘柄 / 市場イベント</div>`;let i=0;while(i<days){let d=dates[i],m=d.getMonth(),j=i;while(j<days&&dates[j].getMonth()===m)j++;monthCells+=`<div class="monthlabel" style="grid-column:${i+2}/span ${j-i}">${d.getFullYear()}年${m+1}月</div>`;i=j}monthCells+='</div>';
+let head=`<div class="dayhead"><div class="stub">日付 →</div>`+dates.map(d=>`<div class="day ${[0,6].includes(d.getDay())?'weekend':''} ${key(d)===key(today)?'today':''}" title="${key(d)}">${d.getDate()}</div>`).join('')+'</div>';
+let rows='';for(let t of db.tickers){rows+=`<div class="rowline"><div class="rowname"><strong>${esc(t.name)}</strong><small>${esc(t.code)}</small></div>`;for(let d of dates){let evs=db.events.filter(e=>e.ticker===t.id&&e.date&&e.date===key(d));rows+=`<div class="cell ${[0,6].includes(d.getDay())?'weekend':''} ${key(d)===key(today)?'today':''}">${evs.map(e=>`<button class="event ${e.type} ${e.date<key(today)?'past':''}" onclick="showEvent('${e.id}')" title="${esc(e.title)}" aria-label="${esc(e.title)}"></button>`).join('')}</div>`}rows+='</div>'}
+tl.innerHTML=monthCells+head+rows;
+let list=db.events.slice().sort((a,b)=>(a.date||'9999-99-99').localeCompare(b.date||'9999-99-99'));document.getElementById('count').textContent=list.length+'件';document.getElementById('eventList').innerHTML=list.map(e=>{let t=db.tickers.find(t=>t.id===e.ticker);let dt=e.date?new Date(e.date+'T00:00:00'):null,diff=dt?Math.round((dt-today)/86400000):null;return `<div class="eventcard"><div><strong>${esc(e.title)}</strong><small>${e.date||'日程未定'} ・ ${esc(t?.name||'未分類')} ・ ${esc(e.status||'個人設定')}<br>${esc(e.memo||'')} ${e.source?`<a class="source" href="${esc(e.source)}" target="_blank" rel="noopener">公式出典</a>`:''}</small></div><div style="text-align:right"><span class="tag">${diff===null?'日程未定':diff<0?Math.abs(diff)+'日前':diff===0?'今日':diff+'日後'}</span><div class="actions"><button onclick="editEvent('${e.id}')">編集</button><button class="delete" onclick="removeEvent('${e.id}')">削除</button></div></div></div>`}).join('')||'<div class="empty">イベントはありません。</div>';
+$('evTicker').innerHTML=db.tickers.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('')}
+function showEvent(id){let e=db.events.find(x=>x.id===id);if(!e)return;alert(`${e.title}\n${e.date}（日本時間表示）\n${e.status||''}\n\n${e.memo||''}\n${e.source||''}`)}
+function openEvent(){editId=null;$('evTitle').value='';$('evDate').value=key(today);$('evMemo').value='';$('evSource').value='';$('evType').value='earnings';$('evStatus').value='個人設定';$('eventForm').style.display='block';}
+function closeEvent(){$('eventForm').style.display='none'}
+function editEvent(id){let e=db.events.find(x=>x.id===id);if(!e)return;editId=id;$('evTitle').value=e.title;$('evDate').value=e.date||'';$('evTicker').value=e.ticker;$('evType').value=e.type;$('evStatus').value=e.status||'個人設定';$('evMemo').value=e.memo||'';$('evSource').value=e.source||'';$('eventForm').style.display='block';window.scrollTo({top:$('eventForm').offsetTop-80,behavior:'smooth'})}
+function saveEvent(){const title=$('evTitle').value.trim(),date=$('evDate').value;if(!title){alert('イベント名を入力してください');return}let e={id:editId||'ev'+Date.now(),title,date,ticker:$('evTicker').value,type:$('evType').value,status:$('evStatus').value,memo:$('evMemo').value,source:$('evSource').value};if(editId){let i=db.events.findIndex(x=>x.id===editId);if(i>=0)db.events[i]=e}else db.events.push(e);closeEvent();persist()}
+function removeEvent(id){if(confirm('このイベントを削除しますか？')){db.events=db.events.filter(e=>e.id!==id);persist()}}
+function openTicker(){$('tkName').value='';$('tkCode').value='';$('tickerForm').style.display='block';$('tkName').focus()}
+function saveTicker(){const name=$('tkName').value.trim(),code=$('tkCode').value.trim();if(!name||!code){alert('銘柄名とコード・ティッカーの両方を入力してください');return}
+if(db.tickers.some(t=>t.code.toLowerCase()===code.toLowerCase())){alert('同じコード・ティッカーの銘柄は既に登録されています');return}
+const id='t'+Date.now();db.tickers.push({id,name,code});persist();$('tickerForm').style.display='none';$('tkName').value='';$('tkCode').value='';}
+function exportData(){let a=document.createElement('a'),blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});a.href=URL.createObjectURL(blob);a.download='investment-timeline-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(ev){let f=ev.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x.tickers)||!Array.isArray(x.events))throw 0;db=x;persist();alert('復元しました')}catch(e){alert('ファイル形式が不正です')}};r.readAsText(f)}
+document.querySelectorAll('[data-range]').forEach(b=>b.onclick=()=>{range=+b.dataset.range;document.querySelectorAll('[data-range]').forEach(x=>x.classList.toggle('active',x===b));render()});
+render();
+// PWA install support. The browser decides whether installation is available.
+let deferredInstallPrompt=null;
+const installButton=document.getElementById('installAppBtn');
+window.addEventListener('beforeinstallprompt',event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+  installButton.style.display='inline-block';
+});
+installButton.addEventListener('click',async()=>{
+  if(!deferredInstallPrompt){
+    alert('Chromeのメニューから「アプリをインストール」または「ホーム画面に追加」を選んでください。');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt=null;
+  installButton.style.display='none';
+});
+window.addEventListener('appinstalled',()=>{
+  installButton.style.display='none';
+});
+// Service worker is available only on HTTPS or localhost.
+if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Service worker registration failed',err)));
+}
+</script></body></html>
